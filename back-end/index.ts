@@ -1,10 +1,18 @@
 import express from "express"; //padrão ecma scrypt
+import { connection, prisma } from "./src/db.js";
 
 const app = express();
 const PORT = 3000;
 
-app.get("/", (req, res) => {
-  res.json({ msg: "Rota incial" });
+connection();
+
+app.get("/", async (req, res) => {
+  try {
+    res.json({});
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Erro ao criar usuário" });
+  }
 });
 
 app.listen(PORT, () => {
