@@ -4,6 +4,8 @@ import { connection, prisma } from "./src/db.js";
 const app = express();
 const PORT = 3000;
 
+console.log(process.env.DATABASE_URL);
+
 connection();
 
 app.get("/", async (req, res) => {

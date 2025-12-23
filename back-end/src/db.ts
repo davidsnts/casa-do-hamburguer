@@ -1,4 +1,3 @@
-import "dotenv/config";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../generated/prisma/client.js";
 
@@ -11,8 +10,12 @@ const prisma = new PrismaClient({ adapter });
 // const prisma = new PrismaClient();
 
 async function connection() {
-  await prisma.$connect();
-  console.log("Conectado ao BD");
+  try {
+    await prisma.$connect();
+    console.log("Conectado ao BD");
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 export { prisma, connection };
