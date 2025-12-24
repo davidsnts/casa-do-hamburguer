@@ -1,16 +1,23 @@
 import express from "express"; //padrão ecma scrypt
 import { connection, prisma } from "./src/db.js";
-
+import { use } from "react";
+import { json } from "node:stream/consumers";
 const app = express();
 const PORT = 3000;
 
-console.log(process.env.DATABASE_URL);
-
 connection();
 
-app.get("/", async (req, res) => {
+app.use(express.json());
+
+app.post("/login", async (req, res) => {
   try {
-    res.json({});
+    const { email, password } = req.body;
+
+    const user = await prisma.user.findFirst({
+      where: { email, password },
+    });
+
+    res.json(user);
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Erro ao criar usuário" });
