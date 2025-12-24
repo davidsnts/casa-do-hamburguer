@@ -2,12 +2,15 @@ import express from "express"; //padrão ecma scrypt
 import { connection, prisma } from "./src/db.js";
 import { use } from "react";
 import { json } from "node:stream/consumers";
+import cors from "cors";
 const app = express();
+
 const PORT = 3000;
 
 connection();
 
 app.use(express.json());
+app.use(cors());
 
 app.post("/login", async (req, res) => {
   try {

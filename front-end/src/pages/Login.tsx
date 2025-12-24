@@ -6,12 +6,20 @@ import Button from "../components/Button";
 
 const Login = () => {
   const [email, setEmail] = useState<string>();
-  const [senha, setSenha] = useState<string>();
+  const [password, setPassword] = useState<string>();
 
-  function handleSubmit(e: React.FormEvent<HTMLElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLElement>) {
     e.preventDefault();
     console.log(email);
-    console.log(senha);
+    console.log(password);
+
+    const response = await fetch("http://localhost:3000/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+    const data = await response.json();
+    console.log(data);
   }
 
   return (
@@ -30,9 +38,9 @@ const Login = () => {
         <Input
           placeholder="Senha"
           type="password"
-          onChange={(e) => setSenha(e.target.value)}
+          onChange={(e) => setPassword(e.target.value)}
         />
-        <Button title="Login" onClick={() => alert()} />
+        <Button type="submit" title="Login" />
         <Link to="/register" className="w-full">
           <Button title="Não tenho uma conta " variant="outline" />
         </Link>
