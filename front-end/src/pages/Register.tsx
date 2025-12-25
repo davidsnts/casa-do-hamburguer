@@ -10,10 +10,33 @@ const Register = () => {
   const [password, setPassword] = useState<string>();
   const [confirmPassword, setConfirmPassword] = useState<string>();
   const [cep, setCep] = useState<string>();
+  const [msg, setMsg] = useState<string>();
 
-  function handleSubmit(e: React.FormEvent<HTMLElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLElement>) {
     e.preventDefault();
-    console.log({ nome, email, password, confirmPassword, cep });
+    try {
+      const response = await fetch("http://localhost:3000/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: nome, email, password, cep }),
+      });
+
+      if (response.status !== 201) {
+        const { msg, message } = await response.json();
+        setMsg(msg || message);
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        setMsg("As senhas devem ser iguais");
+        return;
+      }
+
+      setMsg("");
+    } catch (error) {
+      console.log(error);
+      return;
+    }
   }
 
   return (
@@ -25,47 +48,56 @@ const Register = () => {
         <Link to="/">
           <img src={logo} alt="" className="mb-4" />
         </Link>
-        <Input placeholder="Nome" onChange={(e) => setNome(e.target.value)} />
+        <Input
+          placeholder="Nome"
+          onChange={(e) => setNome(e.target.value)}
+          required
+        />
 
         <Input
           placeholder="Email"
           type="email"
           onChange={(e) => setEmail(e.target.value)}
+          required
         />
 
         <Input
           placeholder="Senha"
           type="password"
           onChange={(e) => setPassword(e.target.value)}
+          required
         />
 
         <Input
           placeholder="Confirme sua senha"
           type="password"
           onChange={(e) => setConfirmPassword(e.target.value)}
+          required
         />
 
         <Input
           placeholder="CEP"
           type="text"
           onChange={(e) => setCep(e.target.value)}
+          required
         />
-
-        <Button
-          type="submit"
-          className="w-full cursor-pointer rounded-md bg-[#c92A0E] py-2 text-sm font-bold text-white"
-          title={"Criar conta"}
-        />
-
-        <Link to="/login" className="w-full">
+        <span className="w-full font-bold text-red-500">{msg}</span>
+        <div className="mt flex w-full flex-col gap-2">
           <Button
+            type="submit"
             className="w-full cursor-pointer rounded-md bg-[#c92A0E] py-2 text-sm font-bold text-white"
-            title={"Já tenho uma conta"}
-            variant="outline"
-          >
-            Já tenho uma conta
-          </Button>
-        </Link>
+            title={"Criar conta"}
+          />
+          <Link to="/login" className="w-full">
+            <Button
+              className="w-full cursor-pointer rounded-md bg-[#c92A0E] py-2 text-sm font-bold text-white"
+              title={"Já tenho uma conta"}
+              variant="outline"
+            >
+              Já tenho uma conta
+            </Button>
+          </Link>
+        </div>
       </div>
     </form>
   );
