@@ -42,10 +42,9 @@ export const login = async (req: Request, res: Response) => {
 
     const token = jwt.sign(userInfos, process.env.JWT_SECRET!);
 
-    console.log(token);
-    res.cookie("user", userInfos, { maxAge: 30 * 1000 });
+    res.cookie("user", token, { maxAge: 30 * 1000 });
 
-    res.status(200).json(token);
+    res.status(200).json(userInfos);
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Erro ao criar usuário" });

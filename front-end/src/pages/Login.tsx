@@ -8,6 +8,7 @@ const Login = () => {
   const [email, setEmail] = useState<string>();
   const [password, setPassword] = useState<string>();
   const [error, setError] = useState<string>();
+  const [user, setUser] = useState<string>();
   const navigate = useNavigate();
 
   async function handleSubmit(e: React.FormEvent<HTMLElement>) {
@@ -38,7 +39,7 @@ const Login = () => {
       if (response.status === 200) {
         setError("");
         const data = await response.json();
-        console.log(data);
+        setUser(data);
         navigate("/");
       }
     } catch (error) {
