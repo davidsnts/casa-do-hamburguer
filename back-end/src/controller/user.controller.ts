@@ -1,6 +1,7 @@
 import { type Request, type Response } from "express";
 import { prisma } from "../db";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 export const login = async (req: Request, res: Response) => {
   try {
@@ -38,9 +39,13 @@ export const login = async (req: Request, res: Response) => {
       id: user.id,
       cep: user.cep,
     };
+
+    const token = jwt.sign(userInfos, process.env.JWT_SECRET!);
+
+    console.log(token);
     res.cookie("user", userInfos, { maxAge: 30 * 1000 });
 
-    res.status(200).json(userInfos);
+    res.status(200).json(token);
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Erro ao criar usuário" });
