@@ -1,15 +1,17 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import logo from "../../public/logo.png";
 import Input from "../components/Input";
 import { Link, useNavigate } from "react-router";
 import Button from "../components/Button";
+import { UserContext } from "../context/UserContext";
 
 const Login = () => {
   const [email, setEmail] = useState<string>();
   const [password, setPassword] = useState<string>();
   const [error, setError] = useState<string>();
-  const [user, setUser] = useState<string>();
   const navigate = useNavigate();
+
+  const { setUser } = useContext(UserContext);
 
   async function handleSubmit(e: React.FormEvent<HTMLElement>) {
     e.preventDefault();
