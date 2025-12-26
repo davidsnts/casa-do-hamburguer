@@ -23,8 +23,8 @@ const Login = () => {
         body: JSON.stringify({ email, password }),
       });
 
-      if (response.status === 404) {
-        setError("Usuário não encontrado");
+      if (response.status === 404 || response.status === 401) {
+        setError("Usuário ou senha incorreta");
         return;
       }
 
