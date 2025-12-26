@@ -1,13 +1,14 @@
 import { useState } from "react";
 import logo from "../../public/logo.png";
 import Input from "../components/Input";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import Button from "../components/Button";
 
 const Login = () => {
   const [email, setEmail] = useState<string>();
   const [password, setPassword] = useState<string>();
   const [error, setError] = useState<string>();
+  const navigate = useNavigate();
 
   async function handleSubmit(e: React.FormEvent<HTMLElement>) {
     e.preventDefault();
@@ -37,6 +38,7 @@ const Login = () => {
         setError("");
         const data = await response.json();
         console.log(data);
+        navigate("/");
       }
     } catch (error) {
       console.log(error);
