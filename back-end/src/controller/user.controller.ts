@@ -32,13 +32,15 @@ export const login = async (req: Request, res: Response) => {
       });
       return;
     }
-
-    res.status(200).json({
-      id: user.id,
+    const userInfos = {
       name: user.name,
       email: user.email,
+      id: user.id,
       cep: user.cep,
-    });
+    };
+    res.cookie("user", userInfos, { maxAge: 30 * 1000 });
+
+    res.status(200).json(userInfos);
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Erro ao criar usuário" });
