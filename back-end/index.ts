@@ -1,5 +1,6 @@
 import express, { type Request, type Response } from "express"; //padrão ecma scrypt
 import { connection, prisma } from "./src/db.js";
+import bcrypt from "bcrypt";
 import cors from "cors";
 const app = express();
 
@@ -22,17 +23,31 @@ app.post("/login", async (req: Request, res: Response) => {
     }
 
     const user = await prisma.user.findFirst({
-      where: { email, password },
+      where: { email },
     });
 
     if (!user) {
-      res.status(404).json({
-        message: "Usuário não encontrado.",
+      res.status(401).json({
+        message: "Usuário ou senha incorreta.",
       });
       return;
     }
 
-    res.status(200).json(user);
+    const match = await bcrypt.compare(password, user.password);
+
+    if (!match) {
+      res.status(401).json({
+        message: "Usuário ou senha incorreta.",
+      });
+      return;
+    }
+
+    res.status(200).json({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      cep: user.cep,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Erro ao criar usuário" });
@@ -58,11 +73,13 @@ app.post("/register", async (req: Request, res: Response) => {
       return;
     }
 
+    const passwordHash = await bcrypt.hash(password, 10);
+
     const newUser = await prisma.user.create({
       data: {
         name,
         email,
-        password,
+        password: passwordHash,
         cep,
       },
     });
