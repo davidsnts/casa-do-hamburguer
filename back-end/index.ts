@@ -2,6 +2,7 @@ import express from "express"; //padrão ecma scrypt
 import { connection } from "./src/db.js";
 import cors from "cors";
 import { router } from "./src/routes.js";
+import cookieParser from "cookie-parser";
 const app = express();
 
 const PORT = 3000;
@@ -15,6 +16,7 @@ app.use(
     credentials: true,
   })
 );
+app.use(cookieParser());
 app.use(router);
 
 app.listen(PORT, () => {

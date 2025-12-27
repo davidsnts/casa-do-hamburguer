@@ -42,7 +42,7 @@ export const login = async (req: Request, res: Response) => {
 
     const token = jwt.sign(userInfos, process.env.JWT_SECRET!);
 
-    res.cookie("user", token, { maxAge: 30 * 1000 });
+    res.cookie("user", token, { maxAge: 43200000 });
 
     res.status(200).json(userInfos);
   } catch (error) {
@@ -84,5 +84,19 @@ export const register = async (req: Request, res: Response) => {
     res.status(201).send(newUser);
   } catch (error) {
     res.status(500).json({ message: "erro no servidor." });
+  }
+};
+
+export const auth = async (req: Request, res: Response) => {
+  try {
+    const token = req.cookies.user;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!);
+
+    if (!decoded) {
+      res.status(401).send({ message: "Usuário não autorizado." });
+    }
+    res.status(200).json(decoded);
+  } catch (error) {
+    res.status(500).send({ message: "Erro no servidor." });
   }
 };
