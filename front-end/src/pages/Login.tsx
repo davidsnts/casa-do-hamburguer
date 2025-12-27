@@ -12,6 +12,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   const { setUser } = useContext(UserContext);
+  console.log(document.cookie);
 
   async function handleSubmit(e: React.FormEvent<HTMLElement>) {
     e.preventDefault();
